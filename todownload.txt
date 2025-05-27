@@ -40,3 +40,45 @@ model = Sequential([
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit(train_data, epochs=10, validation_data=val_data)
+
+
+
+
+//sample demostration use
+
+model.save('waste_classifier.h5')
+
+
+import tensorflow as tf
+import numpy as np
+from tensorflow.keras.preprocessing import image
+import matplotlib.pyplot as plt
+import os
+
+# Load the trained model
+model = tf.keras.models.load_model('waste_classifier.h5')
+
+# Map class indices manually (match your training folder structure)
+class_names = ['glass', 'metal', 'paper', 'plastic']  # Adjust if needed
+
+# Load and preprocess a single image
+def load_and_prepare_image(img_path):
+    img = image.load_img(img_path, target_size=(128, 128))
+    img_array = image.img_to_array(img) / 255.0  # Rescale to [0,1]
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    return img_array
+
+# Demo prediction function
+def predict_image(img_path):
+    img_array = load_and_prepare_image(img_path)
+    prediction = model.predict(img_array)
+    predicted_class = class_names[np.argmax(prediction)]
+
+    # Display image with prediction
+    plt.imshow(image.load_img(img_path))
+    plt.title(f'Predicted: {predicted_class}')
+    plt.axis('off')
+    plt.show()
+
+# Run the demo
+predict_image('test_images/sample_plastic.jpg')  # Replace with your test image path
