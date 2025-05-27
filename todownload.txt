@@ -1,0 +1,5 @@
+cd Deployment
+streamlit run app.py
+
+//if any errors
+    you finish it...
